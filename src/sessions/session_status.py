@@ -5,3 +5,5 @@ class SessionStatus(enum.Enum):
     completed = 2
     cancelled = 3
     rescheduled = 4
+    running = 5
+    did_not_happen = 6

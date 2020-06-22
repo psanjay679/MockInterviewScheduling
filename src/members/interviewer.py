@@ -2,6 +2,9 @@ from .member import Member
 from src.sessions.slot import Slot
 import datetime
 from src.exceptions import exceptions
+from src.sessions.session_status import SessionStatus
+import random
+
 
 class Interviewer(Member):
 
@@ -17,7 +20,7 @@ class Interviewer(Member):
     def get_slots(self):
         slots = list()
         for slot in self.slots:
-            if slot.created_by >= datetime.datetime.now():
+            if slot.created_by > datetime.datetime.now():
                 slots.append(slot)
 
         return slots
@@ -34,3 +37,17 @@ class Interviewer(Member):
             raise exceptions.RatingNotInRange('rating not in range')
 
         session.rating = rating
+
+    def start_session(self, session):
+        session.session_status = SessionStatus.running
+
+    def attend_session(self, session):
+
+        current_time = datetime.datetime.now()
+        if session.session_status in (SessionStatus.scheduled, SessionStatus.rescheduled) and\
+                session.slot.start_time <= current_time < session.slot.end_time:
+            session.session_status = SessionStatus.running
+
+    def end_session(self, session):
+        self.rate_session(session, random.choice(1, 2, 3, 4, 5))
+        session.session_status = SessionStatus.completed
