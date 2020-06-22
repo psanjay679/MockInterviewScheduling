@@ -1,6 +1,4 @@
-## Interview Kickstart (IK)
-
-### Interview Kickstart (IK) offers 15 mock interviews to every student who enrolls in our course. We need to build an API that can service requests from any client and either return an interview slot or return no slots available. The constraints are
+### Requirements
 
 - The Interviewers provide their own availability. They are not available 24/7 for any slot that the student requests. 
 
@@ -24,7 +22,7 @@ The input request looks like this
 
 ```
 
-Classes
+### Classes
 
 - Student (id, name, email, phone, Address, Sessions)
 - Address (pin, street, city, state, country)
