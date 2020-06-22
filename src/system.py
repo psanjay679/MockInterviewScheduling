@@ -25,7 +25,7 @@ class System:
     def add_slot(self, interviewer, start_time, end_time):
         interviewer.add_slot(start_time, end_time)
 
-    def schedule_session(self, student):
+    def schedule_session(self, student, start_time, end_time):
 
         if student not in self.students:
             return False
@@ -37,17 +37,13 @@ class System:
 
         interviewer_not_allowed = (session.interviewer for session in student.get_session_by_status(SessionStatus.completed))
 
-        available_slots = list()
-
         for interviewer in self.interviewers:
             if interviewer not in interviewer_not_allowed:
-                available_slots.extend(interviewer.get_slots())
+                for slot in interviewer.get_slots():
+                    if slot.start_time == start_time  and slot.end_time == end_time:
+                        interviewer = slot.created_by()
+                        session = Session(slot, student, interviewer)
+                        student.add_session(session)
+                        interviewer.add_session(session)
 
-
-        # taking random slot for now. As it can depend of multiple parametes how to select the slot
-        slot = random.choice(available_slots)
-        interviewer = slot.created_by()
-        session = Session(slot, student, interviewer)
-        student.add_session(session)
-        interviewer.add_session(session)
-
+                        break
